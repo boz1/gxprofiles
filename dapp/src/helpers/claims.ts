@@ -80,10 +80,10 @@ const claimTypes: Array<ClaimType> = [
 ];
 
 export interface BasicDraft {
-  alias: string;
-  description: string;
-  logo: string;
-  website: string;
+  name: string;
+  company: string;
+  department: string;
+  role: string;
 }
 
 export interface EthereumDraft {
@@ -144,7 +144,7 @@ export const newDisplay = (ct: ClaimType): ClaimUIAssets => {
     case 'basic':
       return {
         description:
-          'This process is used to generate some basic profile information about yourself by filling in an alias, description, and logo for your profile.',
+          'This process is used to generate some basic profile information about yourself by filling in a name, company, department, and a role.',
         display: 'Basic Profile Information',
         icon: PersonOutlined,
         route: '/basic-profile',
@@ -222,10 +222,10 @@ export const newDraft = (ct: ClaimType): ClaimDraft => {
   switch (ct) {
     case 'basic':
       return {
-        alias: '',
-        description: '',
-        logo: '',
-        website: '',
+        name: '',
+        company: '',
+        department: '',
+        role: '',
       };
     case 'discord':
       return {
@@ -318,13 +318,16 @@ export const contentToDraft = (ct: ClaimType, content: any): ClaimDraft => {
   switch (ct) {
     case 'basic': {
       const { credentialSubject } = content;
-      const { alias, description, logo, website } = credentialSubject;
+      const { name,
+        company,
+        department,
+        role,} = credentialSubject;
 
       return {
-        alias,
-        description,
-        logo,
-        website,
+        name,
+        company,
+        department,
+        role,
       };
     }
     case 'ethereum': {
@@ -398,10 +401,10 @@ export const claimToOutlink = (ct: ClaimType, c: Claim): string => {
   let draft = contentToDraft(c.type, c.content);
 
   switch (ct) {
-    case 'basic': {
-      draft = draft as BasicDraft;
-      return draft.website;
-    }
+    // case 'basic': {
+    //   draft = draft as BasicDraft;
+    //   return draft.website;
+    // }
     case 'ethereum': {
       draft = draft as EthereumDraft;
       return `https://etherscan.io/address/${draft.address}`;

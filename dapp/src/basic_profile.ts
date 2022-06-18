@@ -9,16 +9,19 @@ import {
 } from 'didkit-wasm';
 
 export const generateSignature = async (profile, userData) => {
-  const { alias, description, website, logo } = profile;
+  const { name,
+    company,
+    department,
+    role, } = profile;
   const did = `did:pkh:tz:${userData.account.address}`;
-  const credential = {
+  const credential = { // TODO: Fix schema types
     '@context': [
       'https://www.w3.org/2018/credentials/v1',
       {
-        alias: 'https://schema.org/name',
-        description: 'https://schema.org/description',
-        website: 'https://schema.org/url',
-        logo: 'https://schema.org/logo',
+        name: 'https://schema.org/name',
+        company: 'https://schema.org/description',
+        department: 'https://schema.org/url',
+        role: 'https://schema.org/logo',
         BasicProfile: 'https://tzprofiles.com/BasicProfile',
       },
     ],
@@ -28,10 +31,10 @@ export const generateSignature = async (profile, userData) => {
     type: ['VerifiableCredential', 'BasicProfile'],
     credentialSubject: {
       id: did,
-      alias,
-      description,
-      website,
-      logo,
+      name,
+      company,
+      department,
+      role,
     },
   };
 

@@ -24,10 +24,10 @@
 
   $: display = verification?.basic.display;
 
-  let alias = '';
-  let description = '';
-  let logo = '';
-  let website = '';
+  let name = '';
+  let company = '';
+  let role = '';
+  let department = '';
 
   let lock: boolean = false;
   let currentStep: number = 1;
@@ -47,49 +47,39 @@
       step={1}
       bind:currentStep
       title="Fill in Basic Information"
-      description="Self-attest to your brand’s information and link it to other identifiers that have been provided."
+      description="Self-attest as an employee."
     >
-      <Label fieldName="alias" value="Alias" class="mt-6" />
+      <Label fieldName="name" value="Name" class="mt-6" />
       <Input
-        bind:value={alias}
-        name="alias"
-        placeholder="Enter an alias"
+        bind:value={name}
+        name="name"
+        placeholder="Enter your Name"
         disabled={currentStep !== 1}
       />
 
-      <Label fieldName="description" value="Description" class="mt-2" />
+      <Label fieldName="company" value="Company" class="mt-2" />
       <Input
-        bind:value={description}
-        name="description"
-        placeholder="Enter a description"
+        bind:value={company}
+        name="company"
+        placeholder="Enter your Company"
         disabled={currentStep !== 1}
       />
 
-      <Label fieldName="website" value="Website" class="mt-2" />
+      <Label fieldName="department" value="Department" class="mt-2" />
       <Input
-        bind:value={website}
-        name="website"
-        placeholder="Enter your website"
+        bind:value={department}
+        name="department"
+        placeholder="Enter your Department"
         disabled={currentStep !== 1}
       />
 
-      <Label fieldName="logo" value="Logo" class="mt-2" />
-      {#if currentStep === 1}
-        <Input
-          bind:value={logo}
-          name="logo"
-          placeholder="Enter an image URL"
-          disabled={currentStep !== 1}
-        />
-      {:else}
-        <img
-          id="logo"
-          name="logo"
-          src={logo}
-          alt="Logo"
-          class="object-cover object-center w-32 h-32 bg-white border rounded-lg cursor-not-allowed border-green-550 opacity-60"
-        />
-      {/if}
+      <Label fieldName="role" value="Role" class="mt-2" />
+      <Input
+        bind:value={role}
+        name="role"
+        placeholder="Enter your Role"
+        disabled={currentStep !== 1}
+      />
 
       {#if currentStep == 1}
         <PrimaryButton
@@ -98,9 +88,9 @@
           onClick={() => {
             next();
           }}
-          disabled={alias.length < 1 ||
-            description.length < 1 ||
-            logo.length < 1}
+          disabled={name.length < 1 ||
+            company.length < 1 ||
+            role.length < 1}
         />
       {/if}
 
@@ -109,10 +99,10 @@
           bind:toggle
           signature={async () => {
             let profile = {
-              alias,
-              description,
-              website,
-              logo,
+              name,
+              company,
+              department,
+              role,
             };
 
             return generateSignature(profile, $userData).then(
@@ -135,10 +125,10 @@
             onClick={() => {
               lock = true;
               let profile = {
-                alias,
-                description,
-                website,
-                logo,
+                name,
+                company,
+                department,
+                role,
               };
               signBasicProfile($userData, $wallet, profile)
                 .then((vc) => {

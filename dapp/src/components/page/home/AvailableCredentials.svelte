@@ -119,7 +119,7 @@
         <th class="text-left">Action</th>
       </tr>
       <tbody class="table-content-continer">
-        {#each Object.values($claimsStream).sort(sortClaimsByStatus) as claim}
+        {#each Object.values($claimsStream).filter((c)=>c.display.display==='Basic Profile Information').sort(sortClaimsByStatus) as claim}
           <tr>
             <td class="flex flex-row items-center">
               <div class="flex items-center justify-start">
