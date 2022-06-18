@@ -113,7 +113,6 @@ export const saveToKepler = async (
       await localWallet.getPKH(),
       ...obj
     );
-
     alert.set({
       message: 'Successfully uploaded to Kepler',
       variant: 'success',
@@ -176,7 +175,6 @@ export const originate = async (): Promise<void> => {
   if (!localClient) {
     throw new Error('No wallet detected');
   }
-
   let claimsKeys = Object.keys(localClaimsStream);
 
   let claimsList: Array<[contractLib.ClaimType, contractLib.ClaimReference]> =
@@ -409,7 +407,17 @@ network.subscribe((network) => {
     networkStrTemp = network;
     strNetwork = network;
 
-    urlNode = `https://${network}.api.tez.ie/`;
+    switch(network ){
+      case "mainnet":
+        urlNode = `https://${network}.api.tez.ie/`;
+        break;
+      case 'ithacanet':
+        urlNode = 'https://ithacanet.ecadinfra.com/';
+        break;
+      default:
+        urlNode = `https://${network}.api.tez.ie/`;
+        break;
+    }
     nodeUrl.set(urlNode);
 
     tzktBaseTemp = `https://api.${networkStrTemp}.tzkt.io`;

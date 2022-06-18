@@ -80,8 +80,8 @@
             class="w-full"
           >
             <Option value="mainnet" text="mainnet" selected />
-            <Option value="hangzhounet" text="hangzhounet" />
-            <!-- Option value="ithicanet" text="ithicanet" / -->
+            <!-- <Option value="hangzhounet" text="hangzhounet" /> -->
+            <Option value="ithacanet" text="ithacanet" />
             <Option value="custom" text="localhost" />
           </Select>
           <div
