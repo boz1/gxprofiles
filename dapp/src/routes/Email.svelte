@@ -229,7 +229,7 @@
     <VerificationStep
       step={4}
       bind:currentStep
-      title="Verify Signature"
+      title="Verify Email"
       description="Paste here the challenge in order to verify your email."
     >
       {#if currentStep === 4}
@@ -240,7 +240,7 @@
           name="enter-gist-url"
         />
         <PrimaryButton
-          text="Verify Challenge"
+          text="Verify"
           class="w-full max-w-48 flex items-center justify-center"
           onClick={() => {
             next(verifyChallenge).then((vc) => {

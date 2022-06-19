@@ -1,34 +1,19 @@
 <script lang="ts">
-  import { Input, Label } from 'src/components';
-  import { ClaimLinkInput } from 'src/components/claims';
+  import { Input, Label, GitHubIcon } from 'src/components';
   import type { EmailDraft, Claim } from 'src/helpers';
+  import { ClaimLinkInput } from 'src/components/claims';
 
-  export let emailClaim: Claim;
-  $: display = emailClaim.display;
-  $: draft = emailClaim.draft as EmailDraft;
+  export let claim: Claim;
+  $: display = claim.display;
+  $: draft = claim.draft as EmailDraft;
 </script>
 
 <div>
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="email" value="Eamil" />
-  </div>
-  {#if draft.email}
-    <Input fluid name="email" class="mb-3" value={draft.email} disabled />
-  {:else}
-    <ClaimLinkInput {display} />
-  {/if}
+    <Label class="mt-4" fieldName="basic-email" value="Email Address" />
 
-  <div class="flex items-center justify-between">
-    <div
-      class="flex flex-col items-center justify-center w-32 h-32 text-center border rounded-lg border-gray-200 text-gray-350"
-      class:opacity-60={true}
-    >
-      <p class="m-2 italic break-words select-none">
-        {'Available in '}
-        <a href="/basic-profile" class="underline">
-          Employee profile Information
-        </a>
-      </p>
-    </div>
+    {#if draft?.email}
+      <p class="text-sm text-gray-350 mt-2">(signed-by tzprofiles.com)</p>
+    {/if}
   </div>
 </div>
