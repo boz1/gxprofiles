@@ -3,7 +3,8 @@
  * boolean indicating if the request uses that HTTP method,
  * header, host or referrer.
  */
-const Method = (method) => (req) => req.method.toLowerCase() === method.toLowerCase();
+const Method = (method) => (req) =>
+  req.method.toLowerCase() === method.toLowerCase();
 const Connect = Method("connect");
 const Delete = Method("delete");
 const Get = Method("get");
@@ -142,7 +143,11 @@ function handleOptions(request) {
   // Make sure the necessary headers are present
   // for this to be a valid pre-flight request
   let headers = request.headers;
-  if (headers.get("Origin") !== null && headers.get("Access-Control-Request-Method") !== null && headers.get("Access-Control-Request-Headers") !== null) {
+  if (
+    headers.get("Origin") !== null &&
+    headers.get("Access-Control-Request-Method") !== null &&
+    headers.get("Access-Control-Request-Headers") !== null
+  ) {
     // Handle CORS pre-flight request.
     // If you want to check or reject the requested method + headers
     // you can do that here.
@@ -150,7 +155,9 @@ function handleOptions(request) {
       ...corsHeaders,
       // Allow all future content Request headers to go back to browser
       // such as Authorization (Bearer) or X-Client-Name-Version
-      "Access-Control-Allow-Headers": request.headers.get("Access-Control-Request-Headers"),
+      "Access-Control-Allow-Headers": request.headers.get(
+        "Access-Control-Request-Headers"
+      ),
     };
 
     return new Response(null, {
@@ -175,7 +182,13 @@ async function handler_witness_tweet(request) {
     let tweet_id = searchParams.get("tweet_id");
     const { witness_tweet } = wasm_bindgen;
     await wasm_bindgen(wasm);
-    const vc = await witness_tweet(TZPROFILES_ME_PRIVATE_KEY, pk, TWITTER_BEARER_TOKEN, handle, tweet_id);
+    const vc = await witness_tweet(
+      TZPROFILES_ME_PRIVATE_KEY,
+      pk,
+      TWITTER_BEARER_TOKEN,
+      handle,
+      tweet_id
+    );
     return new Response(vc, { status: 200, headers: headers });
   } catch (error) {
     return new Response(error, { status: 500, headers: headers });
@@ -193,7 +206,14 @@ async function handler_discord_message(request) {
     const discord_handle = searchParams.get("discordHandle");
 
     await wasm_bindgen(wasm);
-    const discordVc = await witness_discord(TZPROFILES_ME_PRIVATE_KEY, pk, DISCORD_AUTHORIZATION_TOKEN, discord_handle, channel_id, message_id);
+    const discordVc = await witness_discord(
+      TZPROFILES_ME_PRIVATE_KEY,
+      pk,
+      DISCORD_AUTHORIZATION_TOKEN,
+      discord_handle,
+      channel_id,
+      message_id
+    );
 
     return new Response(JSON.stringify(discordVc), {
       status: 200,
@@ -234,7 +254,12 @@ async function handle_github_lookup(request) {
     const githubUsername = decodeURIComponent(searchParams.get("handle"));
 
     await wasm_bindgen(wasm);
-    const vc = await gist_lookup(TZPROFILES_ME_PRIVATE_KEY, pk, gistId, githubUsername);
+    const vc = await gist_lookup(
+      TZPROFILES_ME_PRIVATE_KEY,
+      pk,
+      gistId,
+      githubUsername
+    );
 
     return new Response(vc, {
       status: 200,
@@ -270,7 +295,7 @@ async function handler_witness_instagram_post(request) {
       pk,
       handle,
       kvObj.link,
-      kvObj.sig,
+      kvObj.sig
     );
 
     return new Response(vc, { status: 200, headers: headers });
@@ -300,7 +325,10 @@ async function handler_instagram_login(request) {
 
     let kvObj = JSON.parse(kvEntry);
 
-    await INSTAGRAM_CLAIM.put(kvObj.key.toLowerCase(), JSON.stringify(kvObj.val));
+    await INSTAGRAM_CLAIM.put(
+      kvObj.key.toLowerCase(),
+      JSON.stringify(kvObj.val)
+    );
 
     const res = `<html>
     <body>
@@ -439,7 +467,10 @@ async function handler_instagram_demo_login(request) {
     );
     let kvObj = JSON.parse(kvEntry);
 
-    await INSTAGRAM_CLAIM.put(kvObj.key.toLowerCase(), JSON.stringify(kvObj.val));
+    await INSTAGRAM_CLAIM.put(
+      kvObj.key.toLowerCase(),
+      JSON.stringify(kvObj.val)
+    );
 
     const res = `<html>
     <body>
@@ -482,7 +513,7 @@ async function handler_instagram_demo_witness(request) {
     }
 
     if (kvObj.sig !== uuid) {
-      throw new Error(`Mismatched UUIDs, ${kvObj.sig} v. ${uuid}`)
+      throw new Error(`Mismatched UUIDs, ${kvObj.sig} v. ${uuid}`);
     }
 
     return new Response(kvEntry, { status: 200, headers: headers });
@@ -494,12 +525,36 @@ async function handler_instagram_demo_witness(request) {
   }
 }
 
+//  TODO: Implement the actual logic here
+async function handler_email_lookup(request) {
+  try {
+    const { email_lookup } = wasm_bindgen;
+    const { searchParams } = new URL(request.url);
+
+    const pk = decodeURIComponent(searchParams.get("pk"));
+    const email = decodeURI(searchParams.get("email"));
+
+    // await wasm_bindgen(wasm);
+    const email_vc = await email_lookup(TZPROFILES_ME_PRIVATE_KEY, pk, email);
+
+    return new Response(JSON.stringify(email_vc), {
+      status: 200,
+      headers: headers,
+    });
+  } catch (error) {
+    return new Response(error, { status: 500, headers: headers });
+  }
+}
 
 async function handleRequest(request) {
   const r = new Router();
   r.get("/demo_instagram_ui", (request) => handler_instagram_demo(request));
-  r.get("/demo_instagram_login", (request) => handler_instagram_demo_login(request));
-  r.get("/demo_instagram_witness", (request) => handler_instagram_demo_witness(request));
+  r.get("/demo_instagram_login", (request) =>
+    handler_instagram_demo_login(request)
+  );
+  r.get("/demo_instagram_witness", (request) =>
+    handler_instagram_demo_witness(request)
+  );
   r.get("/witness_tweet", (request) => handler_witness_tweet(request));
   // TODO uncomment when the time has come
   // r.get("/witness_instagram", (request) => handler_witness_instagram_post(request));
@@ -509,7 +564,7 @@ async function handleRequest(request) {
   r.get("/witness_discord", (request) => handler_discord_message(request));
   r.get("/witness_dns", (request) => handler_dns_lookup(request));
   r.get("/witness_github", (request) => handle_github_lookup(request));
+  r.get("/witness_email", (request) => handler_email_lookup(request));
   const resp = await r.route(request);
   return resp;
 }
-

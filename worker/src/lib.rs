@@ -568,6 +568,80 @@ pub async fn gist_lookup(
     })
 }
 
+#[wasm_bindgen]
+pub async fn email_lookup(
+    secret_key_jwk: String,
+    public_key_tezos: String,
+    email: String,
+) -> Promise {
+    initialize_logging();
+
+    future_to_promise(async move {
+        let pk: JWK = jserr!(jwk_from_tezos_key(&public_key_tezos));
+        let pkh = jserr!(hash_public_key(&pk));
+        let sk: JWK = jserr!(serde_json::from_str(&secret_key_jwk));
+
+        // let re = Regex::new(r"^(([a-zA-Z\d]([a-zA-Z\d-]*[a-zA-Z\d])*)\.)+[a-zA-Z]{2,}$").unwrap();
+        // if !re.is_match(&domain) {
+        //     jserr!(Err(anyhow!("Invalid domain name.")));
+        // }
+
+        // let dns_result = jserr!(dns::retrieve_txt_records(domain.clone()).await);
+
+        let mut vc = jserr!(dns::build_email_vc(&pk, &email));
+
+        // let signature_to_resolve = jserr!(dns::find_signature_to_resolve(dns_result));
+
+        let comp_target = attest(SubjectType::Dns(Subject {
+            id: domain,
+            key: pkh,
+        }));
+
+        // let sig = jserr!(dns::extract_dns_signature(signature_to_resolve));
+        // jserr!(verify_signature(&comp_target, &pk, &sig));
+
+        let mut props = HashMap::new();
+        props.insert(
+            "publicKeyJwk".to_string(),
+            jserr!(serde_json::to_value(pk.clone())),
+        );
+
+        let mut evidence_map = HashMap::new();
+
+        evidence_map.insert(
+            "timestamp".to_string(),
+            serde_json::Value::String(Utc::now().to_rfc3339_opts(SecondsFormat::Millis, true)),
+        );
+
+        // evidence_map.insert(
+        //     "dnsServer".to_string(),
+        //     serde_json::Value::String("https://cloudflare-dns.com/dns-query".to_string()),
+        // );
+
+        let evidence = Evidence {
+            id: None,
+            type_: vec!["EmailVerificationMessage".to_string()],
+            property_set: Some(evidence_map),
+        };
+        vc.evidence = Some(OneOrMany::One(evidence));
+
+        let proof = jserr!(
+            vc.generate_proof(
+                &sk,
+                &LinkedDataProofOptions {
+                    verification_method: Some(URI::String(format!("{}#controller", SPRUCE_DIDWEB))),
+                    ..Default::default()
+                },
+                &DIDWeb
+            )
+            .await
+        );
+        vc.proof = Some(OneOrMany::One(proof));
+
+        Ok(jserr!(serde_json::to_string(&vc)).into())
+    })
+}
+
 #[test]
 #[should_panic]
 fn test_bad_sig() {
