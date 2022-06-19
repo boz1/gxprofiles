@@ -17,6 +17,7 @@
   import type { ClaimMap } from 'src/helpers';
   import { useNavigate } from 'svelte-navigator';
   import { signEmail } from 'src/email';
+  import { MAIL_SERVER_URL } from '../constants/server';
 
   let navigate = useNavigate();
 
@@ -50,7 +51,7 @@
 
   const sendChallenge = async (): Promise<any> => {
     try {
-      let ref = 'http://localhost:8081/sendEmail'; // TODO: ${process.env.MAIL_SERVER_URL}/sendEmail`;
+      let ref = MAIL_SERVER_URL + '/sendEmail';
       let res = await fetch(ref, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
@@ -85,7 +86,7 @@
 
   const verifyChallenge = async (): Promise<string> => {
     try {
-      let ref = 'http://localhost:8081/verifyChallenge'; // TODO: ${process.env.MAIL_SERVER_URL}/verifyChallenge`;
+      let ref = MAIL_SERVER_URL + '/verifyChallenge';
       let res = await fetch(ref, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
