@@ -405,10 +405,10 @@ export const contentToDraft = (ct: ClaimType, content: any): ClaimDraft => {
     }
     case 'email': {
       const { credentialSubject } = content;
-      const {email} = credentialSubject;
+      const {sameAs} = credentialSubject;
 
       return {
-        email
+        email: sameAs.split("/")[sameAs.split("/").length - 1],
       };
     }
   }

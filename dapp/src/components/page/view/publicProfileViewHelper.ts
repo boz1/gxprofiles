@@ -4,6 +4,8 @@ export const publicProfileViewTooltip = (claim): string | Boolean => {
       return claim.draft.handle;
     case 'dns':
       return claim.draft.address;
+    case 'email':
+        return claim.draft.email;
     default:
       return false;
   }
@@ -15,6 +17,8 @@ export const selectIconCopyText = (claim): string => {
       return claim.draft.handle;
     case 'dns':
       return claim.draft.address;
+    case 'email':
+        return claim.draft.email;
     default:
       return '';
   }

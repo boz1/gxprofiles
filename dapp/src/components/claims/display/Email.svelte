@@ -6,8 +6,6 @@
   export let emailClaim: Claim;
   $: display = emailClaim.display;
   $: draft = emailClaim.draft as EmailDraft;
-
-  console.log('mlsflasknan');
 </script>
 
 <div>

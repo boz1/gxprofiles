@@ -129,6 +129,7 @@
   };
 </script>
 
+<!-- TODO: Verify Email Structure -->
 <BasePage
   class="flex flex-1 flex-wrap items-center justify-center text-white 2xl:px-32 sm:px-8 px-4 overflow-hidden-x fade-in overflow-y-auto pt-18 sm:pt-22 md:pt-34"
 >

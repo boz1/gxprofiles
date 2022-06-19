@@ -300,7 +300,7 @@ wallet.subscribe((w) => {
               case 'VerifiableCredential': {
                 let vc = JSON.parse(c);
                 let type_ = claimTypeFromVC(vc);
-                if(type_ !== 'email'){
+                if(type_ !== 'email'){ // TODO: Fix Email VC Verification
                   let verifyResult = await verifyCredential(c, '{}');
                   let verifyJSON = JSON.parse(verifyResult);
                   if (verifyJSON.errors.length > 0) {
@@ -574,12 +574,16 @@ export const search = async (wallet: string, opts: searchRetryOpts) => {
           // Validate VC
           switch (t) {
             case 'VerifiableCredential': {
-              let verifyResult = await verifyCredential(c, '{}');
-              let verifyJSON = JSON.parse(verifyResult);
-              if (verifyJSON.errors.length > 0)
-                throw new Error(
-                  `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
-                );
+              let vc = JSON.parse(c);
+              let type_ = claimTypeFromVC(vc);
+              if(type_ !== 'email'){ // TODO: Fix Email VC Verification
+                let verifyResult = await verifyCredential(c, '{}');
+                let verifyJSON = JSON.parse(verifyResult);
+                if (verifyJSON.errors.length > 0)
+                  throw new Error(
+                    `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
+                  );
+              }
               break;
             }
             default:
@@ -614,7 +618,6 @@ export const search = async (wallet: string, opts: searchRetryOpts) => {
 
           nextSearchClaims[ct] = claimFromTriple(ct, triple);
         });
-
         searchClaims.set(nextSearchClaims);
         return;
       } else {
