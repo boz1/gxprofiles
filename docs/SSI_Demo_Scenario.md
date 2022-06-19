@@ -24,7 +24,7 @@ The W3C standards and especially the DID methods leave plenty of opportunities t
 
 # TzProfiles
 
-For establishing this scenario, we have decided to use TzProfiles from Spruce. TzProfiles enables Tezos users to associate their online identity with their Tezos account. By default, it supports creating credentials such as Twitter, GitHub, Discord, DNS, and Basic Profile. Once you have prepared your crendtials, TzProfiles enables you to deploy them. While the actual credential content is stored on a distributed storage (Kepler by Spruce), the identifier of where the credential is located on Kepler is stored on a smart contract. Every TzProfiles user has their own contract that stores their vc identifier data. When you decide to add a new credential with TzProfiles, the contract storage is only extended (a new contract is not deployed).
+For establishing this scenario, we have decided to use TzProfiles from Spruce. TzProfiles enables Tezos users to associate their online identity with their Tezos account. By default, it supports creating credentials such as Twitter, GitHub, Discord, DNS, and Basic Profile. Once you have prepared your credentials, TzProfiles enables you to deploy them. While the actual credential content is stored on a distributed storage (Kepler by Spruce), the identifier of where the credential is located on Kepler is stored on a smart contract. Every TzProfiles user has their own contract that stores their vc identifier data. When you decide to add a new credential with TzProfiles, the contract storage is only extended (a new contract is not deployed).
 
 The Basic Profile credential allows one to self-attest their personal info regarding alias, website, description, and logo. Since this is pretty similar to what we need for vc#0, we have extended this credential to support our requirements. For issuing vc#1, we have added a new credential type to TzProfiles called Email Verification.
 
@@ -37,7 +37,7 @@ Besides extending the supported credentials, we have also enabled ithacanet conn
 - What about circular dependencies?! Registries?
 - What is the "initialization procedure"
 - Should Bob present ASCS a verifiable presentation which is a combination of vc#0 and vc#1
-- Vcs are now stored on a distributed storage which is accesible by anyone. Is this safe?
+- vcs are now stored on a distributed storage that is accessible by anyone. Is this safe?
 - Most of the "finance wallets" on Tezos don't support credentials (i.e. You don't see anything about the credentials you own on your wallet. You have to specifically visit your smart contract and access the vc from there). Does Spruce have a wallet solution for this besides Credible which is a mobile wallet?
 
 # Implementation-related Open Questions
