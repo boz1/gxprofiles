@@ -10,7 +10,7 @@ import {
 
 export const generateSignature = async (email, userData) => {
   const did = `did:pkh:tz:${userData.account.address}`;
-  const credential = { // TODO: Fix schema types
+  const credential = {
     "@context": [
       "https://www.w3.org/2018/credentials/v1",
       {
