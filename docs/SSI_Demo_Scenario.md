@@ -13,13 +13,13 @@ The W3C standards and especially the DID methods leave plenty of opportunities t
 
 - Alice: Manager of a specific "Data Space" which is the "ENVITED"
 - Bob: BMW employee who wants to have access to a Sensor Model in the "ENVITED" data space
-- Charles: A Continental employee who wants to tokenize a Sensor Model and is responsible to make it available TO BMW through "ENVITED"(upload, etc) -> connecting part to the other Sensor Model Tokenization Demo
+- Charles: A Continental employee who wants to tokenize a Sensor Model and is responsible to make it available to BMW through "ENVITED"(upload, etc) -> connecting part to the other Sensor Model Tokenization Demo
 
 ## Scenario
 
 1. Bob received a BMW email address with a "bmw.de" domain
 2. Bob has a role and some additional information about himself he testifies (Name, Company, Department, Role)
-3. Bob wants to get a vc to prove his personal info (vc#0) and another one to prove that he owns a bmw.de email address (vc#1). While vc#0 is self-attested, vc#1 issued by ASCS. 
+3. Bob wants to get a vc to prove his personal info (vc#0) and another one to prove that he owns a bmw.de email address (vc#1). While vc#0 is self-attested, vc#1 is issued by ASCS. 
 4. He presents his vc to "ENVITED" and Alice does the verification (i.e. checks if the issuer (did) is listed in trust anchor, checks Bob's did, checks the claims in the vc) // NOT COMPLETE
 
 # TzProfiles
@@ -36,6 +36,9 @@ Besides extending the supported credentials, we have also enabled ithacanet conn
 - The issuer could auto-check self-attestation claims like "is the company name part of the email domain" when issuing a vc -> Future
 - What about circular dependencies?! Registries?
 - What is the "initialization procedure"
+- Should Bob present ASCS a verifiable presentation which is a combination of vc#0 and vc#1
+- Vcs are now stored on a distributed storage which is accesible by anyone. Is this safe?
+- Most of the "finance wallets" on Tezos don't support credentials (i.e. You don't see anything about the credentials you own on your wallet. You have to specifically visit your smart contract and access the vc from there). Does Spruce have a wallet solution for this besides Credible which is a mobile wallet?
 
 # Implementation-related Open Questions
 
