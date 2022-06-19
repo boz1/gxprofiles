@@ -4,3 +4,4 @@ public/build/bundle.*
 package-lock.json
 yarn.lock
 public/*.wasm
+.env

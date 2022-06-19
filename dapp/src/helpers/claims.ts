@@ -25,7 +25,8 @@ export type ClaimType = 'basic'
   | 'ethereum'
   | 'discord'
   | 'dns'
-  | 'github';
+  | 'github'
+  | 'email';
 
 // NOTE: Ethereum backwards compatibility
 export type ClaimVCType =
@@ -35,7 +36,8 @@ export type ClaimVCType =
   | 'EthereumAddressControl'
   | 'DiscordVerification'
   | 'DnsVerification'
-  | 'GitHubVerification';
+  | 'GitHubVerification'
+  | 'EmailVerification';
 
 // TODO: Type better? Define what VCs look like generically?
 export const claimTypeFromVC = (vc: any): ClaimType | false => {
@@ -61,6 +63,8 @@ export const claimTypeFromVC = (vc: any): ClaimType | false => {
         return 'dns';
       case 'GitHubVerification':
         return 'github';
+      case 'EmailVerification':
+        return 'email';
       default:
     }
   }
@@ -77,13 +81,14 @@ const claimTypes: Array<ClaimType> = [
   'discord',
   'dns',
   'github',
+  'email'
 ];
 
 export interface BasicDraft {
-  alias: string;
-  description: string;
-  logo: string;
-  website: string;
+  name: string;
+  company: string;
+  department: string;
+  role: string;
 }
 
 export interface EthereumDraft {
@@ -109,13 +114,18 @@ export interface GitHubDraft {
   gistId: string;
 }
 
+export interface EmailDraft {
+  email: string
+}
+
 export type ClaimDraft =
   | BasicDraft
   | TwitterDraft
   | EthereumDraft
   | DiscordDraft
   | DnsDraft
-  | GitHubDraft;
+  | GitHubDraft
+  | EmailDraft
 
 /*
  * UI Text & Assets
@@ -144,7 +154,7 @@ export const newDisplay = (ct: ClaimType): ClaimUIAssets => {
     case 'basic':
       return {
         description:
-          'This process is used to generate some basic profile information about yourself by filling in an alias, description, and logo for your profile.',
+          'This process is used to generate some basic profile information about yourself by filling in a name, company, department, and a role.',
         display: 'Basic Profile Information',
         icon: PersonOutlined,
         route: '/basic-profile',
@@ -212,6 +222,18 @@ export const newDisplay = (ct: ClaimType): ClaimUIAssets => {
         title: 'GitHub Verification',
         type: 'Social Media'
       }
+    case 'email':
+      return {
+        description:
+          'This process is used to link your email address to your Tezos account.',
+        display: 'Email Verification',
+        icon: PersonOutlined,
+        route: '/email',
+        routeDescription: 'Email Verification',
+        proof: 'Challenge',
+        title: 'Email Verification',
+        type: 'Email Ownership',
+      };
   }
 
   exhaustiveCheck(ct);
@@ -222,10 +244,10 @@ export const newDraft = (ct: ClaimType): ClaimDraft => {
   switch (ct) {
     case 'basic':
       return {
-        alias: '',
-        description: '',
-        logo: '',
-        website: '',
+        name: '',
+        company: '',
+        department: '',
+        role: '',
       };
     case 'discord':
       return {
@@ -251,6 +273,10 @@ export const newDraft = (ct: ClaimType): ClaimDraft => {
       return {
         handle: '',
         gistId: ''
+      }
+    case 'email':
+      return {
+        email: '',
       }
   }
 
@@ -318,13 +344,16 @@ export const contentToDraft = (ct: ClaimType, content: any): ClaimDraft => {
   switch (ct) {
     case 'basic': {
       const { credentialSubject } = content;
-      const { alias, description, logo, website } = credentialSubject;
+      const { name,
+        company,
+        department,
+        role,} = credentialSubject;
 
       return {
-        alias,
-        description,
-        logo,
-        website,
+        name,
+        company,
+        department,
+        role,
       };
     }
     case 'ethereum': {
@@ -374,6 +403,14 @@ export const contentToDraft = (ct: ClaimType, content: any): ClaimDraft => {
         gistId,
       }
     }
+    case 'email': {
+      const { credentialSubject } = content;
+      const {email} = credentialSubject;
+
+      return {
+        email
+      };
+    }
   }
 
   exhaustiveCheck(ct);
@@ -398,10 +435,10 @@ export const claimToOutlink = (ct: ClaimType, c: Claim): string => {
   let draft = contentToDraft(c.type, c.content);
 
   switch (ct) {
-    case 'basic': {
-      draft = draft as BasicDraft;
-      return draft.website;
-    }
+    // case 'basic': {
+    //   draft = draft as BasicDraft;
+    //   return draft.website;
+    // }
     case 'ethereum': {
       draft = draft as EthereumDraft;
       return `https://etherscan.io/address/${draft.address}`;
@@ -489,6 +526,7 @@ export const getFullAttestation = async (
       return `${getUnsignedAttestation(subject)}=${await getSignedAttestation(subject, userData, wallet)}`;
     case "discord":
     case "github":
+    case "email":
     case "twitter":
       return `${getUnsignedAttestation(subject)}${await getSignedAttestation(subject, userData, wallet)}`;
   }

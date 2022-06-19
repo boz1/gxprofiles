@@ -10,30 +10,30 @@
 
 <div>
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-alias" value="Alias" />
-    {#if draft.alias}
+    <Label class="mt-4" fieldName="basic-name" value="Name" />
+    {#if draft.name}
       <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
     {/if}
   </div>
-  {#if draft.alias}
-    <Input fluid name="basic-alias" class="mb-3" value={draft.alias} disabled />
+  {#if draft.name}
+    <Input fluid name="basic-name" class="mb-3" value={draft.name} disabled />
   {:else}
     <ClaimLinkInput {display} />
   {/if}
 
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-description" value="Description" />
-    {#if draft.description}
+    <Label class="mt-4" fieldName="basic-company" value="Last Name" />
+    {#if draft.company}
       <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
     {/if}
   </div>
 
-  {#if draft.description}
+  {#if draft.company}
     <Input
       fluid
-      name="basic-description"
+      name="basic-company"
       class="mb-3"
-      value={draft.description}
+      value={draft.company}
       disabled
     />
   {:else}
@@ -41,26 +41,26 @@
   {/if}
 
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-website" value="Website" />
-    {#if draft.website}
+    <Label class="mt-4" fieldName="basic-department" value="Department" />
+    {#if draft.department}
       <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
     {/if}
   </div>
 
-  {#if draft.website}
+  {#if draft.department}
     <Input
       fluid
-      name="basic-website"
+      name="basic-department"
       class="mb-3"
-      value={draft.website}
+      value={draft.department}
       disabled
     />
   {:else}
     <ClaimLinkInput {display} />
   {/if}
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-logo" value="Logo" />
-    {#if draft.logo}
+    <Label class="mt-4" fieldName="basic-role" value="Role" />
+    {#if draft.role}
       <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
     {/if}
   </div>
@@ -70,18 +70,18 @@
       class="flex flex-col items-center justify-center w-32 h-32 text-center border rounded-lg border-gray-200 text-gray-350"
       class:opacity-60={true}
     >
-      {#if draft.logo}
+      {#if draft.role}
         <img
-          name="basic-logo"
+          name="basic-role"
           class="object-cover object-center w-full h-full rounded-lg flex items-center justify-center"
-          src={draft.logo}
-          alt="Basic profile logo"
+          src={draft.role}
+          alt="role"
         />
       {:else}
         <p class="m-2 italic break-words select-none">
           {'Available in '}
           <a href="/basic-profile" class="underline">
-            Basic profile Information
+            Employee profile Information
           </a>
         </p>
       {/if}
