@@ -224,7 +224,6 @@ export const addClaims = async (
   > = claimsList.map((claim) => {
     return ['VerifiableCredential', claim.irl || ''];
   });
-
   return await localClient.addClaims(localContractAddress, claimsArgsList);
 };
 
@@ -299,15 +298,17 @@ wallet.subscribe((w) => {
             // Validate VC
             switch (t) {
               case 'VerifiableCredential': {
-                let verifyResult = await verifyCredential(c, '{}');
-                let verifyJSON = JSON.parse(verifyResult);
-                if (verifyJSON.errors.length > 0) {
-                  throw new Error(
-                    `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
-                  );
-                }
                 let vc = JSON.parse(c);
                 let type_ = claimTypeFromVC(vc);
+                if(type_ !== 'email'){
+                  let verifyResult = await verifyCredential(c, '{}');
+                  let verifyJSON = JSON.parse(verifyResult);
+                  if (verifyJSON.errors.length > 0) {
+                    throw new Error(
+                      `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
+                    );
+                  }
+                }
                 switch (type_) {
                   case 'basic':
                   case 'twitter':

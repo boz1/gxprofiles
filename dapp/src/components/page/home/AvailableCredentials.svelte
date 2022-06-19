@@ -119,7 +119,9 @@
         <th class="text-left">Action</th>
       </tr>
       <tbody class="table-content-continer">
-        {#each Object.values($claimsStream).filter((c)=>c.display.display==='Basic Profile Information').sort(sortClaimsByStatus) as claim}
+        {#each Object.values($claimsStream)
+          .filter((c) => c.display.display === 'Basic Profile Information' || c.display.display === 'Email Verification')
+          .sort(sortClaimsByStatus) as claim}
           <tr>
             <td class="flex flex-row items-center">
               <div class="flex items-center justify-start">
@@ -128,7 +130,9 @@
                   class="sm:mr-3 w-4 h-4"
                 />
               </div>
-              <div class="hidden sm:flex w-icon-describe-desk">{claim.display.display}</div>
+              <div class="hidden sm:flex w-icon-describe-desk">
+                {claim.display.display}
+              </div>
             </td>
             <td class="px-2 sm:px-4 md:px-6">
               {claim.display.type}
