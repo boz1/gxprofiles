@@ -39,6 +39,8 @@ Besides extending the supported credentials, we have also enabled ithacanet conn
 - Should Bob present ASCS a verifiable presentation which is a combination of vc#0 and vc#1
 - vcs are now stored on a distributed storage that is accessible by anyone. Is this safe?
 - Most of the "finance wallets" on Tezos don't support credentials (i.e. You don't see anything about the credentials you own on your wallet. You have to specifically visit your smart contract and access the vc from there). Does Spruce have a wallet solution for this besides Credible which is a mobile wallet?
+- Can tzprofiles search profile feature be used for verification?
+- Issuer did is always did:web:tzprofiles.com (except self-attested vcs). This must be issuer specific.
 
 # Implementation-related Open Questions
 

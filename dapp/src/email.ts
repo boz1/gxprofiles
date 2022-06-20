@@ -33,7 +33,7 @@ export const generateSignature = async (email, userData) => {
     id: "urn:uuid:" + uuid(),
     type: ["VerifiableCredential", "EmailVerification"],
     credentialSubject: {
-      id: "did:pkh:tz:" + userData.address,
+      id: "did:pkh:tz:" + userData.account.address,
       sameAs: "email:" + email,
     },
     issuer: "did:web:tzprofiles.com", // TODO: Change it to ASCS did maybe?
@@ -91,7 +91,7 @@ export const signEmail = async (userData, email, signature) => {
     // }
 
     alert.set({
-      message: "You've completed your Email successfully!",
+      message: "You've completed your Email Verification successfully!",
       variant: 'success',
     });
 

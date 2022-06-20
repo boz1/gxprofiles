@@ -22,7 +22,7 @@
   {/if}
 
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-company" value="Last Name" />
+    <Label class="mt-4" fieldName="basic-company" value="Company" />
     {#if draft.company}
       <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
     {/if}
@@ -58,6 +58,7 @@
   {:else}
     <ClaimLinkInput {display} />
   {/if}
+
   <div class="flex justify-between items-center">
     <Label class="mt-4" fieldName="basic-role" value="Role" />
     {#if draft.role}
@@ -65,26 +66,9 @@
     {/if}
   </div>
 
-  <div class="flex items-center justify-between">
-    <div
-      class="flex flex-col items-center justify-center w-32 h-32 text-center border rounded-lg border-gray-200 text-gray-350"
-      class:opacity-60={true}
-    >
-      {#if draft.role}
-        <img
-          name="basic-role"
-          class="object-cover object-center w-full h-full rounded-lg flex items-center justify-center"
-          src={draft.role}
-          alt="role"
-        />
-      {:else}
-        <p class="m-2 italic break-words select-none">
-          {'Available in '}
-          <a href="/basic-profile" class="underline">
-            Employee profile Information
-          </a>
-        </p>
-      {/if}
-    </div>
-  </div>
+  {#if draft.role}
+    <Input fluid name="basic-role" class="mb-3" value={draft.role} disabled />
+  {:else}
+    <ClaimLinkInput {display} />
+  {/if}
 </div>
