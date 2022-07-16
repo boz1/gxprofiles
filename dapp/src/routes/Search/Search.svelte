@@ -82,7 +82,7 @@
             class="w-full"
           >
             <Option value="mainnet" text="mainnet" selected />
-            <Option value="ithacanet" text="ithacanet" />
+            <Option value="ghostnet" text="ghostnet" />
             <Option value="custom" text="localhost" />
           </Select>
           <div

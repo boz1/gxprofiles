@@ -113,6 +113,7 @@ export const saveToKepler = async (
       await localWallet.getPKH(),
       ...obj
     );
+
     alert.set({
       message: 'Successfully uploaded to Kepler',
       variant: 'success',
@@ -175,6 +176,7 @@ export const originate = async (): Promise<void> => {
   if (!localClient) {
     throw new Error('No wallet detected');
   }
+
   let claimsKeys = Object.keys(localClaimsStream);
 
   let claimsList: Array<[contractLib.ClaimType, contractLib.ClaimReference]> =
@@ -224,6 +226,7 @@ export const addClaims = async (
   > = claimsList.map((claim) => {
     return ['VerifiableCredential', claim.irl || ''];
   });
+
   return await localClient.addClaims(localContractAddress, claimsArgsList);
 };
 
@@ -298,17 +301,15 @@ wallet.subscribe((w) => {
             // Validate VC
             switch (t) {
               case 'VerifiableCredential': {
+                let verifyResult = await verifyCredential(c, '{}');
+                let verifyJSON = JSON.parse(verifyResult);
+                if (verifyJSON.errors.length > 0) {
+                  throw new Error(
+                    `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
+                  );
+                }
                 let vc = JSON.parse(c);
                 let type_ = claimTypeFromVC(vc);
-                if(type_ !== 'email'){ // TODO: Fix Email VC Verification
-                  let verifyResult = await verifyCredential(c, '{}');
-                  let verifyJSON = JSON.parse(verifyResult);
-                  if (verifyJSON.errors.length > 0) {
-                    throw new Error(
-                      `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
-                    );
-                  }
-                }
                 switch (type_) {
                   case 'basic':
                   case 'twitter':
@@ -410,13 +411,13 @@ network.subscribe((network) => {
 
     switch(network ){
       case "mainnet":
-        urlNode = `https://${network}.api.tez.ie/`;
+        urlNode = `https://${network}.api.tez.ie`;
         break;
-      case 'ithacanet':
-        urlNode = 'https://ithacanet.ecadinfra.com/';
+      case 'ghostnet':
+        urlNode = 'https://ghostnet.ecadinfra.com';
         break;
       default:
-        urlNode = `https://${network}.api.tez.ie/`;
+        urlNode = `https://${network}.api.tez.ie`;
         break;
     }
     nodeUrl.set(urlNode);
@@ -574,16 +575,12 @@ export const search = async (wallet: string, opts: searchRetryOpts) => {
           // Validate VC
           switch (t) {
             case 'VerifiableCredential': {
-              let vc = JSON.parse(c);
-              let type_ = claimTypeFromVC(vc);
-              if(type_ !== 'email'){ // TODO: Fix Email VC Verification
-                let verifyResult = await verifyCredential(c, '{}');
-                let verifyJSON = JSON.parse(verifyResult);
-                if (verifyJSON.errors.length > 0)
-                  throw new Error(
-                    `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
-                  );
-              }
+              let verifyResult = await verifyCredential(c, '{}');
+              let verifyJSON = JSON.parse(verifyResult);
+              if (verifyJSON.errors.length > 0)
+                throw new Error(
+                  `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
+                );
               break;
             }
             default:
@@ -618,6 +615,7 @@ export const search = async (wallet: string, opts: searchRetryOpts) => {
 
           nextSearchClaims[ct] = claimFromTriple(ct, triple);
         });
+
         searchClaims.set(nextSearchClaims);
         return;
       } else {
